@@ -1,3 +1,11 @@
+[![GitHub release](https://img.shields.io/github/release/Santandersecurityresearch/DrHeader.svg)](https://GitHub.com/Santandersecurityresearch/DrHeader/releases/)
+[![GitHub commits](https://img.shields.io/github/commits-since/Santandersecurityresearch/DrHeader/v1.0.0.svg)](https://GitHub.com/Santandersecurityresearch/DrHeader/commit/)
+[![Github all releases](https://img.shields.io/github/downloads/Santandersecurityresearch/DrHeader/total.svg)](https://GitHub.com/Santandersecurityresearch/DrHeader/releases/)
+[![HitCount](http://hits.dwyl.io/Santandersecurityresearch/DrHeader.svg)](http://hits.dwyl.io/Santandersecurityresearch/DrHeader)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/Santandersecurityresearch/DrHeader.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Santandersecurityresearch/DrHeader/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Santandersecurityresearch/DrHeader.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Santandersecurityresearch/DrHeader/context:python)
+[![MIT license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+
 ![drHEADer](assets/img/hero.png)
 
 # Welcome to drHEADer
@@ -15,7 +23,7 @@ Whilst it works with Python 2.x, End of Life (EOL) is coming so if possible, use
 
 
 ``` console
-$ python setup.py install
+$ python3 setup.py install --user
 ```
 This will install all the pre-requisites and you'll end up with a drheader executable.
 
@@ -96,6 +104,15 @@ At the same time, you can customize the headers sent by the request. For that, y
     drheader_instance = Drheader(url="http://test.com", request_headers=custom_headers)
 
 As we continue development on drHEADer, we will further enhance this functionality. 
+
+#### Other `requests` arguments
+
+The _verify_ argument supported by ```requests``` can be included. The default value is set to `True`.
+
+    # create drheader instance
+    drheader_instance = Drheader(url="http://test.com", verify=False)
+
+Other arguments may be included in the future such as _timeout_, _allow_redirects_ or _proxies_.
 
 # How Do I Customise drHEADer Rules?
 
