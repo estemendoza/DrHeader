@@ -11,6 +11,7 @@ class Drheader:
     Core functionality for DrHeader. This is where the magic happens
     """
     error_types = {
+        0: 'No error found',
         1: 'Header not included in response',
         2: 'Header should not be returned',
         3: 'Value does not match security policy',
@@ -140,6 +141,8 @@ class Drheader:
                 self.__add_report_item(
                     'high', rule, 3, expected_value_list, self.headers[rule]
                 )
+            else:
+                self.__add_report_item('high', rule, 0)
 
     def __validate_not_exists(self, rule):
         """
@@ -150,6 +153,8 @@ class Drheader:
 
         if rule in self.headers:
             self.__add_report_item('high', rule, 2)
+        else:
+            self.__add_report_item('high', rule, 0)
 
     def __validate_exists(self, rule):
         """
@@ -160,6 +165,8 @@ class Drheader:
 
         if rule not in self.headers:
             self.__add_report_item('high', rule, 1)
+        else:
+            self.__add_report_item('high', rule, 0)
 
     def __validate_must_avoid(self, rule, config):
         """
@@ -176,6 +183,8 @@ class Drheader:
                     self.__add_report_item(
                         'medium', rule, 5, config['Must-Avoid'], avoid
                     )
+                else:
+                    self.__add_report_item('medium', rule, 0)
         except KeyError:
             pass
 
@@ -197,6 +206,8 @@ class Drheader:
                                 self.__add_report_item('high', rule, 4, config['Must-Contain'], contain, cookie)
                             else:
                                 self.__add_report_item('medium', rule, 4, config['Must-Contain'], contain, cookie)
+                        else:
+                            self.__add_report_item('high', rule, 0)
             elif rule == 'Content-Security-Policy':
                 config['Must-Contain-One'] = [item.lower() for item in config['Must-Contain-One']]
                 contain = False
@@ -210,6 +221,8 @@ class Drheader:
                             break
                 if not contain:
                     self.__add_report_item('high', rule, 4, config['Must-Contain-One'], config['Must-Contain-One'])
+                else:
+                    self.__add_report_item('high', rule, 0)
             else:
                 config['Must-Contain'] = [item.lower() for item in config['Must-Contain']]
                 for contain in config['Must-Contain']:
@@ -217,6 +230,8 @@ class Drheader:
                         self.__add_report_item(
                             'medium', rule, 4, config['Must-Contain'], contain
                         )
+                    else:
+                        self.__add_report_item('medium', rule, 0)
         except KeyError:
             pass
 
@@ -253,7 +268,7 @@ class Drheader:
         cookie=''
     ):
         """
-        Add a entry to report.
+        Add an entry to report.
 
         :param severity: [low, medium, high]
         :type severity: str
@@ -266,8 +281,12 @@ class Drheader:
         :param cookie: Value of cookie (if applicable)
         """
 
-        error = {'rule': rule, 'severity': severity,
-                 'message': self.error_types[error_type]}
+        error = {
+            'rule': rule,
+            'severity': severity,
+            'message': self.error_types[error_type],
+            'status': 'FAIL' if error_type != 0 else 'PASS'
+        }
 
         if expected:
             error['expected'] = expected
@@ -281,4 +300,5 @@ class Drheader:
             else:
                 error['value'] = self.headers[rule]
             error['anomaly'] = value
+
         self.report.append(error)
